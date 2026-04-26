@@ -58,12 +58,13 @@ def merchant_breakdown(db: Session = Depends(get_db)):
 
 @router.get("/timeline")
 def timeline(db: Session = Depends(get_db)):
-    from sqlalchemy import cast, Date
+    from sqlalchemy import cast, Date, Integer, case
+    fraud_expr = func.sum(case((Transaction.is_fraud == True, 1), else_=0))
     rows = (
         db.query(
             cast(Transaction.timestamp, Date).label("date"),
             func.count(Transaction.id).label("total"),
-            func.sum(func.cast(Transaction.is_fraud, func.Integer if False else type(1))).label("fraud"),
+            fraud_expr.label("fraud"),
         )
         .group_by(cast(Transaction.timestamp, Date))
         .order_by(cast(Transaction.timestamp, Date))
