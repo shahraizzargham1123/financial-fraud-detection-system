@@ -1,11 +1,10 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 const COLORS = {
-  "0-20": "#10b981",
-  "20-40": "#3b82f6",
-  "40-60": "#f59e0b",
-  "60-80": "#f97316",
-  "80-100": "#ef4444",
+  "Low (0-49)": "#10b981",
+  "Medium (50-64)": "#f59e0b",
+  "High (65-79)": "#f97316",
+  "Critical (80-100)": "#ef4444",
 };
 
 export default function RiskDistribution({ data }) {

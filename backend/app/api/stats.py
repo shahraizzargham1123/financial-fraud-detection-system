@@ -28,20 +28,18 @@ def summary(db: Session = Depends(get_db)):
 
 @router.get("/risk-distribution")
 def risk_distribution(db: Session = Depends(get_db)):
-    buckets = {"0-20": 0, "20-40": 0, "40-60": 0, "60-80": 0, "80-100": 0}
+    buckets = {"Low (0-49)": 0, "Medium (50-64)": 0, "High (65-79)": 0, "Critical (80-100)": 0}
     transactions = db.query(Transaction.risk_score).all()
 
     for (score,) in transactions:
-        if score < 20:
-            buckets["0-20"] += 1
-        elif score < 40:
-            buckets["20-40"] += 1
-        elif score < 60:
-            buckets["40-60"] += 1
+        if score < 50:
+            buckets["Low (0-49)"] += 1
+        elif score < 65:
+            buckets["Medium (50-64)"] += 1
         elif score < 80:
-            buckets["60-80"] += 1
+            buckets["High (65-79)"] += 1
         else:
-            buckets["80-100"] += 1
+            buckets["Critical (80-100)"] += 1
 
     return [{"range": k, "count": v} for k, v in buckets.items()]
 
